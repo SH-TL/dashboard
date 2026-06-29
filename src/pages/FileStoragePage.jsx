@@ -34,29 +34,6 @@ function FileStoragePage() {
     });
   }, []);
 
-  const handleSelectAll = useCallback(() => {
-    setSelectedIds(new Set(filteredFiles.map((f) => f.id)));
-  }, [filteredFiles]);
-
-  const handleBulkDownload = useCallback(async () => {
-    if (selectedIds.size === 0) return;
-    const targets = filteredFiles.filter((f) => selectedIds.has(f.id));
-    for (const file of targets) {
-      try {
-        const { data, error } = await supabase.storage.from('files').download(file.storage_path);
-        if (error) throw error;
-        const url = URL.createObjectURL(data);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = file.original_name;
-        a.click();
-        URL.revokeObjectURL(url);
-        await new Promise((resolve) => setTimeout(resolve, 150));
-      } catch (err) {
-        console.error('다운로드 실패:', err);
-      }
-    }
-  }, [filteredFiles, selectedIds]);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -82,6 +59,30 @@ function FileStoragePage() {
     if (activeTab === 'all') return files;
     return files.filter((f) => f.category === activeTab);
   }, [files, activeTab]);
+
+  const handleSelectAll = useCallback(() => {
+    setSelectedIds(new Set(filteredFiles.map((f) => f.id)));
+  }, [filteredFiles]);
+
+  const handleBulkDownload = useCallback(async () => {
+    if (selectedIds.size === 0) return;
+    const targets = filteredFiles.filter((f) => selectedIds.has(f.id));
+    for (const file of targets) {
+      try {
+        const { data, error } = await supabase.storage.from('files').download(file.storage_path);
+        if (error) throw error;
+        const url = URL.createObjectURL(data);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = file.original_name;
+        a.click();
+        URL.revokeObjectURL(url);
+        await new Promise((resolve) => setTimeout(resolve, 150));
+      } catch (err) {
+        console.error('다운로드 실패:', err);
+      }
+    }
+  }, [filteredFiles, selectedIds]);
 
   const counts = useMemo(() => ({
     all: files.length,
