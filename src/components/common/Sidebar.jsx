@@ -16,14 +16,12 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CloudIcon from '@mui/icons-material/Cloud';
-import ShowChartIcon from '@mui/icons-material/ShowChart';
 import SettingsIcon from '@mui/icons-material/Settings';
 import BoltIcon from '@mui/icons-material/Bolt';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 
 const NAV_ITEMS = [
   { path: '/', label: 'File Storage', icon: <CloudIcon fontSize='small' /> },
-  { path: '/analytics', label: 'Analytics', icon: <ShowChartIcon fontSize='small' /> },
 ];
 
 const BOTTOM_ITEMS = [
