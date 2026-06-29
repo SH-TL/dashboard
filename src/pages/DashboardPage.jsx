@@ -75,7 +75,6 @@ const KPI_LG_ITEMS = [
 ];
 
 function DashboardPage() {
-  const [activeMenu, setActiveMenu] = useState('analytics');
   const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -84,7 +83,7 @@ function DashboardPage() {
     <Box sx={{ display: 'flex', width: '100%', minHeight: '100vh', bgcolor: 'background.default' }}>
       {/* 사이드바 — 데스크톱 */}
       {!isMobile && (
-        <Sidebar activeMenu={activeMenu} onMenuChange={setActiveMenu} />
+        <Sidebar />
       )}
 
       {/* 사이드바 — 모바일 Drawer */}
@@ -96,7 +95,7 @@ function DashboardPage() {
           '& .MuiDrawer-paper': { width: 220, bgcolor: 'background.paper', border: 'none' },
         }}
       >
-        <Sidebar activeMenu={activeMenu} onMenuChange={(k) => { setActiveMenu(k); setMobileOpen(false); }} />
+        <Sidebar onClose={() => setMobileOpen(false)} />
       </Drawer>
 
       {/* 메인 영역 */}
@@ -116,8 +115,6 @@ function DashboardPage() {
 
         {/* 콘텐츠 */}
         <Box sx={{ flex: 1, p: { xs: '16px', md: '24px' }, overflow: 'auto' }}>
-
-          {/* KPI 소형 카드 — 4열 */}
           <Grid container spacing={{ xs: '10px', md: '16px' }} sx={{ mb: { xs: '10px', md: '16px' } }}>
             {KPI_ITEMS.map((item) => (
               <Grid key={item.label} size={{ xs: 12, sm: 6, lg: 3 }}>
@@ -126,7 +123,6 @@ function DashboardPage() {
             ))}
           </Grid>
 
-          {/* KPI 대형 카드 — 2열 */}
           <Grid container spacing={{ xs: '10px', md: '16px' }} sx={{ mb: { xs: '10px', md: '16px' } }}>
             {KPI_LG_ITEMS.map((item) => (
               <Grid key={item.label} size={{ xs: 12, sm: 6 }}>
@@ -135,7 +131,6 @@ function DashboardPage() {
             ))}
           </Grid>
 
-          {/* 차트 — 2열 */}
           <Grid container spacing={{ xs: '10px', md: '16px' }} sx={{ mb: { xs: '10px', md: '16px' } }}>
             <Grid size={{ xs: 12, lg: 6 }}>
               <SalesChart />
@@ -145,7 +140,6 @@ function DashboardPage() {
             </Grid>
           </Grid>
 
-          {/* 주문 테이블 */}
           <OrderTable />
         </Box>
       </Box>
