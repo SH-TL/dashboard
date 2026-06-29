@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap');
+
 * {
   box-sizing: border-box;
 }
@@ -8,6 +10,7 @@ body {
   padding: 0;
   width: 100%;
   min-height: 100vh;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
 }
 
 #root {
@@ -15,4 +18,21 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0D0402;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3A2010;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #C49200;
 }
