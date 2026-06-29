@@ -4,7 +4,7 @@ import DashboardPage from './pages/DashboardPage';
 
 function App() {
   return (
-    <BrowserRouter basename='/dashboard'>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Routes>
         <Route path='/' element={<FileStoragePage />} />
         <Route path='/analytics' element={<DashboardPage />} />
