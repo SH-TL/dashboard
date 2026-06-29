@@ -7,7 +7,7 @@ import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import PeopleIcon from '@mui/icons-material/People';
 import SubscriptionsIcon from '@mui/icons-material/Subscriptions';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
@@ -31,7 +31,7 @@ const KPI_ITEMS = [
     changePercent: 7.5,
   },
   {
-    icon: <CheckCircleOutlineIcon sx={{ fontSize: 18, color: '#10B981' }} />,
+    icon: <CheckCircleOutlinedIcon sx={{ fontSize: 18, color: '#10B981' }} />,
     iconBgColor: '#10B98130',
     label: 'Approved',
     value: '4,890',
