@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -32,6 +33,30 @@ function FileStoragePage() {
       return next;
     });
   }, []);
+
+  const handleSelectAll = useCallback(() => {
+    setSelectedIds(new Set(filteredFiles.map((f) => f.id)));
+  }, [filteredFiles]);
+
+  const handleBulkDownload = useCallback(async () => {
+    if (selectedIds.size === 0) return;
+    const targets = filteredFiles.filter((f) => selectedIds.has(f.id));
+    for (const file of targets) {
+      try {
+        const { data, error } = await supabase.storage.from('files').download(file.storage_path);
+        if (error) throw error;
+        const url = URL.createObjectURL(data);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = file.original_name;
+        a.click();
+        URL.revokeObjectURL(url);
+        await new Promise((resolve) => setTimeout(resolve, 150));
+      } catch (err) {
+        console.error('다운로드 실패:', err);
+      }
+    }
+  }, [filteredFiles, selectedIds]);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -149,8 +174,50 @@ function FileStoragePage() {
               </Typography>
             </Box>
 
-            {/* 카테고리 탭 */}
-            <CategoryTabs activeTab={activeTab} onTabChange={setActiveTab} counts={counts} />
+            {/* 카테고리 탭 + 전체선택/다운로드 버튼 */}
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
+              <CategoryTabs activeTab={activeTab} onTabChange={setActiveTab} counts={counts} />
+              <Box sx={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
+                <Button
+                  size='small'
+                  onClick={handleSelectAll}
+                  sx={{
+                    fontSize: '0.75rem',
+                    fontWeight: 500,
+                    height: 32,
+                    px: '12px',
+                    border: '1px solid',
+                    borderColor: '#3A2010',
+                    color: 'text.secondary',
+                    bgcolor: 'transparent',
+                    '&:hover': { borderColor: 'primary.main', color: 'primary.main', bgcolor: '#EAB50010' },
+                  }}
+                >
+                  전체 선택
+                </Button>
+                <Button
+                  size='small'
+                  onClick={handleBulkDownload}
+                  sx={{
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
+                    height: 32,
+                    px: '12px',
+                    bgcolor: selectedIds.size > 0 ? 'primary.main' : '#1E0E04',
+                    color: selectedIds.size > 0 ? '#180805' : '#5A3A20',
+                    boxShadow: 'none',
+                    cursor: selectedIds.size > 0 ? 'pointer' : 'default',
+                    transition: 'background-color 0.2s, color 0.2s',
+                    '&:hover': {
+                      bgcolor: selectedIds.size > 0 ? '#F5C420' : '#1E0E04',
+                      boxShadow: 'none',
+                    },
+                  }}
+                >
+                  다운로드
+                </Button>
+              </Box>
+            </Box>
 
             {/* 파일 목록 */}
             {isLoading ? (
