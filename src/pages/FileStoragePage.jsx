@@ -23,6 +23,15 @@ function FileStoragePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('all');
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [selectedIds, setSelectedIds] = useState(new Set());
+
+  const handleSelect = useCallback((id) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }, []);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -33,7 +42,10 @@ function FileStoragePage() {
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (!error && data) setFiles(data);
+    if (!error && data) {
+      setFiles(data);
+      setSelectedIds(new Set());
+    }
     setIsLoading(false);
   }, []);
 
@@ -156,7 +168,12 @@ function FileStoragePage() {
               <Grid container spacing={{ xs: '10px', md: '16px' }}>
                 {filteredFiles.map((file) => (
                   <Grid key={file.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-                    <FileCard file={file} onDelete={fetchFiles} />
+                    <FileCard
+                      file={file}
+                      onDelete={fetchFiles}
+                      isSelected={selectedIds.has(file.id)}
+                      onSelect={handleSelect}
+                    />
                   </Grid>
                 ))}
               </Grid>

@@ -4,9 +4,11 @@
  * Props:
  * @param {object} file - 파일 메타데이터 객체 [Required]
  * @param {function} onDelete - 삭제 완료 후 목록 갱신 콜백 [Required]
+ * @param {boolean} isSelected - 체크박스 선택 여부 [Optional, 기본값: false]
+ * @param {function} onSelect - 체크박스 클릭 핸들러 (id) => void [Optional]
  *
  * Example usage:
- * <FileCard file={fileObj} onDelete={fetchFiles} />
+ * <FileCard file={fileObj} onDelete={fetchFiles} isSelected={false} onSelect={(id) => toggle(id)} />
  */
 import { useState } from 'react';
 import Box from '@mui/material/Box';
@@ -15,6 +17,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import Chip from '@mui/material/Chip';
 import Tooltip from '@mui/material/Tooltip';
+import Checkbox from '@mui/material/Checkbox';
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArticleIcon from '@mui/icons-material/Article';
@@ -46,7 +49,7 @@ const CATEGORY_COLOR = {
   other: { bg: '#9CA3AF20', color: '#9CA3AF' },
 };
 
-function FileCard({ file, onDelete }) {
+function FileCard({ file, onDelete, isSelected = false, onSelect }) {
   const [isDownloading, setIsDownloading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -97,23 +100,37 @@ function FileCard({ file, onDelete }) {
         gap: '12px',
         height: '100%',
         transition: 'border-color 0.15s',
-        '&:hover': { borderColor: '#C49200' },
+        borderColor: isSelected ? 'primary.main' : undefined,
+        '&:hover': { borderColor: isSelected ? 'primary.light' : '#C49200' },
       }}
     >
-      {/* 상단: 아이콘 + 카테고리 태그 */}
+      {/* 상단: 체크박스 + 아이콘 + 카테고리 태그 */}
       <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-        <Box
-          sx={{
-            width: 48,
-            height: 48,
-            borderRadius: '10px',
-            bgcolor: catColor.bg,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          {icon}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Checkbox
+            checked={isSelected}
+            onChange={() => onSelect?.(file.id)}
+            size='small'
+            sx={{
+              p: 0,
+              color: '#3A2010',
+              '&.Mui-checked': { color: 'primary.main' },
+              '&:hover': { bgcolor: 'transparent' },
+            }}
+          />
+          <Box
+            sx={{
+              width: 48,
+              height: 48,
+              borderRadius: '10px',
+              bgcolor: catColor.bg,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            {icon}
+          </Box>
         </Box>
         <Chip
           label={CATEGORY_LABEL[file.category] || '기타'}
