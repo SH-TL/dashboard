@@ -60,9 +60,15 @@ function FileStoragePage() {
     return files.filter((f) => f.category === activeTab);
   }, [files, activeTab]);
 
+  const isAllSelected = filteredFiles.length > 0 && filteredFiles.every((f) => selectedIds.has(f.id));
+
   const handleSelectAll = useCallback(() => {
-    setSelectedIds(new Set(filteredFiles.map((f) => f.id)));
-  }, [filteredFiles]);
+    if (isAllSelected) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(filteredFiles.map((f) => f.id)));
+    }
+  }, [filteredFiles, isAllSelected]);
 
   const handleBulkDownload = useCallback(async () => {
     if (selectedIds.size === 0) return;
